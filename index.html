@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Veille Flexpack66</title>
+  <style>
+    :root { --ink:#17202a; --line:#dfe4ea; --paper:#ffffff; --soft:#f4f6f8; --accent:#1f5d50; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,sans-serif; color:var(--ink); background:var(--soft); }
+    header { background:var(--accent); color:white; padding:28px max(24px, calc((100% - 1100px)/2)); }
+    header h1 { margin:0 0 6px; }
+    header p { margin:0; opacity:.9; }
+    main { max-width:1100px; margin:auto; padding:24px; }
+    .notice { border-left:4px solid var(--accent); background:white; padding:14px 16px; margin-bottom:20px; }
+    .controls { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+    .controls label { font-weight:bold; }
+    select,input { border:1px solid var(--line); border-radius:6px; padding:8px 10px; background:white; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:18px; }
+    section { background:white; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+    section h2 { margin:0; padding:14px 16px; background:#edf3f1; border-bottom:1px solid var(--line); }
+    .entry { padding:16px; border-bottom:1px solid var(--line); }
+    .entry:last-child { border-bottom:0; }
+    .entry h3 { margin:0 0 10px; font-size:17px; }
+    .meta { display:grid; gap:4px; color:#4b5963; font-size:14px; }
+    .excerpt { margin:12px 0 0; line-height:1.45; }
+    .price { display:inline-block; margin-top:10px; padding:5px 8px; background:#fff4d6; border-radius:4px; }
+    .empty { color:#697780; padding:16px; }
+    footer { max-width:1100px; margin:auto; padding:0 24px 30px; color:#697780; font-size:13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Veille Flexpack66</h1>
+    <p>Rapport mensuel — emballages carton et bois</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Mode transcription uniquement.</strong> Cette page présente les informations telles qu’elles apparaissent dans les sources configurées. Elle n’effectue ni analyse, ni interprétation, ni estimation de prix.
+    </div>
+
+    <div class="controls">
+      <label for="month">Mois :</label>
+      <input id="month" type="month" value="2026-10">
+      <label for="category">Catégorie :</label>
+      <select id="category">
+        <option value="all">Cartons et bois</option>
+        <option value="carton">Cartons</option>
+        <option value="bois">Bois</option>
+      </select>
+    </div>
+
+    <div class="grid" id="reports">
+      <section data-category="carton">
+        <h2>Cartons</h2>
+        <div class="empty">Aucun élément publié dans les flux configurés pour cette période.</div>
+      </section>
+      <section data-category="bois">
+        <h2>Bois</h2>
+        <div class="empty">Aucun élément publié dans les flux configurés pour cette période.</div>
+      </section>
+    </div>
+
+    <p id="status" style="margin-top:18px;color:#697780"></p>
+  </main>
+
+  <footer>
+    Sources : flux publics configurés dans le dépôt. Les articles antérieurs au 1er janvier 2020 ne sont pas affichés.
+  </footer>
+
+  <script>
+    const categoryFilter = document.getElementById('category');
+    categoryFilter.addEventListener('change', () => {
+      const value = categoryFilter.value;
+      document.querySelectorAll('[data-category]').forEach(section => {
+        section.hidden = value !== 'all' && section.dataset.category !== value;
+      });
+    });
+
+    document.getElementById('month').addEventListener('change', event => {
+      document.getElementById('status').textContent =
+        `Période demandée : ${event.target.value}. Les rapports mensuels générés seront affichés ici lorsqu’une source aura été configurée.`;
+    });
+
+    document.getElementById('status').textContent =
+      'Aucune source concurrentielle n’est encore configurée. Ajoutez des flux RSS/Atom dans config/sources.yml.';
+  </script>
+</body>
+</html>
